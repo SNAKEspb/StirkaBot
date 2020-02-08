@@ -9,8 +9,8 @@ namespace StirkaBot.VKBot
 {
     public class VKBot : IVKBot
     {
-        static string _token { get; set; } = "0c29646fefcc442729f323eaf428f999dba1bcc95abfe3da03d0459c7b55fe6b965a59585b14c7a1c24af";
-        static string _groupId { get; set; } = "179992947";
+        static string _token { get; set; } = "39f59d6db93fa0db9fe851ba9914f1a7883c3bd9167de02481e854a14956b1a34acc9f5dd8dbbadfa0104";
+        static string _groupId { get; set; } = "191795794";
         static string _apiVersion { get; set; } = "5.103";
         static string _confirmationCode { get; set; } = "8ff28f3c";
 
