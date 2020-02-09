@@ -49,7 +49,7 @@ namespace StirkaBot.Services
                 .add(new Flow.Link() { label = "Инкассация", node = cleanliness })
                 .add(getOtherLink(goalInput));
 
-            goalInput.add(getNextLink(goal));
+            goalInput.add(getNextLink(cleanliness));
 
             cleanliness.add(new Flow.Link() { label = "Чисто", node = commonPhoto })
                 .add(new Flow.Link() { label = "Норм", node = commonPhoto })
@@ -88,6 +88,7 @@ namespace StirkaBot.Services
 
             flow.add(new List<Flow.Node>() { 
                 start,
+                address,
                 goal,
                 goalInput,
                 cleanliness,
