@@ -77,9 +77,9 @@ namespace StirkaBot.Services
             issuesInput.add(getNextLink(issues));
 
             collection.add(new Flow.Link() { label = "Да", node = collectionPhoto, color = COLOR_POSITIVE })
-                .add(new Flow.Link() { label = "Нет", node = end });
+                .add(new Flow.Link() { label = "Нет", node = end, color = COLOR_NEGATIVE });
 
-            collectionPhoto.add(new Flow.Link() { label = "Да", node = collectionPhoto, color = COLOR_NEGATIVE });
+            collectionPhoto.add(getNextLink(end));
 
             end.add(getStartLink(goal));
 

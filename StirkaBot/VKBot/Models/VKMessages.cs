@@ -11,7 +11,7 @@ namespace StirkaBot.VKBot.Models
         public UpdateMessageObject @object { get; set; }
         public int group_id { get; set; }
         public string event_id { get; set; }
-        public string payload => @object != null ? @object.message.payload.ToString() : null;
+        public string payload => @object != null && @object.message.payload != null ? @object.message.payload.ToString() : null;
 
         public string peer_id => @object != null ? @object.message.peer_id.ToString() : null;
         public string MessageType => type;
