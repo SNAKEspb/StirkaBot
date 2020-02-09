@@ -28,17 +28,18 @@ namespace StirkaBot.Controllers
         [HttpPost]
         public Task<IActionResult> Post()
         {
-            var message = Newtonsoft.Json.JsonConvert.DeserializeObject<UpdateMessage>(Util.getRawBody(HttpContext.Request.Body));
-            _logger.Log(NLog.LogLevel.Info, $"Start bot process {message.text}");
-            var process = ProcessMessagesAsync(bot, message);
+            string messageBody = Util.getRawBody(HttpContext.Request.Body);
+            _logger.Log(NLog.LogLevel.Info, $"Start bot process {messageBody}");
+            var process = ProcessMessagesAsync(bot, messageBody);
             _logger.Log(NLog.LogLevel.Info, $"End bot process {process}");
             return process;
         }
 
-        async Task<IActionResult> ProcessMessagesAsync(IVKBot bot, IIncomingMessage message)
+        async Task<IActionResult> ProcessMessagesAsync(IVKBot bot, string messageBody)
         {
             try
             {
+                var message = Newtonsoft.Json.JsonConvert.DeserializeObject<UpdateMessage>(messageBody);
                 //check chache
                 //if cache already contains the message, then return ok result, else proceed
                 ObjectCache cache = MemoryCache.Default;
@@ -72,7 +73,8 @@ namespace StirkaBot.Controllers
             catch (Exception ex)
             {
                 _logger.Log(NLog.LogLevel.Error, ex, "Error during bot process");
-                return Ok(ex.ToString());
+                //return Ok(ex.ToString());
+                return Ok("ok");
             }
             return Ok("ok");
         }

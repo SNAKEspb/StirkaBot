@@ -11,18 +11,18 @@ namespace StirkaBot.VKBot.Models
         public UpdateMessageObject @object { get; set; }
         public int group_id { get; set; }
         public string event_id { get; set; }
-        public string payload => @object != null && @object.message.payload != null ? @object.message.payload.ToString() : null;
+        public string payload => @object != null && @object.message != null ? @object.message.payload.ToString() : null;
 
-        public string peer_id => @object != null ? @object.message.peer_id.ToString() : null;
+        public string peer_id => @object != null && @object.message != null ? @object.message.peer_id.ToString() : null;
         public string MessageType => type;
-        public string from_id => @object != null ? @object.message.from_id.ToString() : null;
-        public string date => @object != null ? @object.message.date.ToString() : null;//DateTime.Now.ToString();
+        public string from_id => @object != null &&  @object.message != null ? @object.message.from_id.ToString() : null;
+        public string date => @object != null && @object.message != null ? @object.message.date.ToString() : null;//DateTime.Now.ToString();
 
-        public string text => @object != null ? @object.message.text : null;
+        public string text => @object != null && @object.message != null ? @object.message.text : null;
         public List<dynamic> attachments => @object.message.attachments;
     }
 
-    public class UpdateMessageObject
+    public class UpdateMessageObject : UpdateMessageData
     {
         public UpdateMessageData message;
         public UpdateMessageClientInfo client_info;
