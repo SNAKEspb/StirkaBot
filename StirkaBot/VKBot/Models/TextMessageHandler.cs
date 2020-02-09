@@ -22,7 +22,8 @@ namespace StirkaBot.VKBot.Models
         {
             return _messageTypes.Contains(message.MessageType.ToLowerInvariant())
                 && string.IsNullOrWhiteSpace(message.payload)
-                && !string.IsNullOrWhiteSpace(message.text);
+                && !string.IsNullOrWhiteSpace(message.text) 
+                && message.text.ToLower() == "начать";
         }
         public async Task HandleAsync(IIncomingMessage message, IVKBot bot)
         {
