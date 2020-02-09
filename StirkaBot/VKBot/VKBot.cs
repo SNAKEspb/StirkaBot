@@ -69,8 +69,8 @@ namespace StirkaBot.VKBot
 
                 JObject payload = JObject.Parse(message.payload);
 
-                string nodeId = payload["command"].ToString() == "start" ? "0" : payload["node"].ToString();
-                string linkId = payload["command"].ToString() == "start" ? "0" : payload["node"].ToString();
+                string nodeId = payload["command"].ToString() == "start" || message.text == "Начать" ? "0" : payload["node"].ToString();
+                string linkId = payload["command"].ToString() == "start" || message.text == "Начать" ? "0" : payload["node"].ToString();
 
                 var node = flow.nodes[nodeId];
                 var link = node.links[linkId];
