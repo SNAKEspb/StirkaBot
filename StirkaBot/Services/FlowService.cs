@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using StirkaBot.Models;
+using Newtonsoft.Json.Linq;
 
 namespace StirkaBot.Services
 {
@@ -113,6 +114,44 @@ namespace StirkaBot.Services
         public static Flow.Link getStartLink(Flow.Node node)
         {
             return new Flow.Link() { label = "Начать", node = node, color = COLOR_PRIMARY };
+        }
+
+        public static string convertToKeyboard(Flow.Node node)
+        {
+            //convert to buttons
+            var buttons = node.links.Select(t =>
+                new VKBot.Models.MenuButton()
+                {
+                    action = new VKBot.Models.MenuAction()
+                    {
+                        label = t.Value.label,
+                        payload = JObject.FromObject(new
+                        {
+                            node = node.id,
+                            link = t.Value.id,
+                            label = t.Value.label
+                        }).ToString(),
+                        type = "text",
+                    },
+                    color = t.Value.color
+                }
+            ).ToList();
+            
+            //split by chunks(max button rows amount = 10)
+            int chunkSize = (int)Math.Ceiling((decimal)buttons.Count / 10);
+
+            var buttonChunks = new List<List<VKBot.Models.MenuButton>>();
+            for (int i = 0; i < buttons.Count; i += chunkSize)
+            {
+                buttonChunks.Add(buttons.GetRange(i, Math.Min(chunkSize, buttons.Count - i)));
+            }
+
+            //convert to keyboard json
+            return JObject.FromObject(new
+            {
+                one_time = false,
+                buttons = buttonChunks
+            }).ToString();
         }
     }
 }

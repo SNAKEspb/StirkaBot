@@ -14,25 +14,15 @@ namespace StirkaBot.Controllers
     [ApiController]
     public class VKBotController : ControllerBase
     {
+        public VKBotController(List<IUpdatesHandler<IIncomingMessage>> updatesHandlers, List<IUpdatesResultHandler<IIncomingMessage>> responseHandlers) {
+            _updatesHandlers = updatesHandlers;
+            _responseHandlers = responseHandlers;
+        }
         static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
         static IVKBot bot = VKBot.VKBot.getInstanse(_logger);
-        static List<IUpdatesHandler<IIncomingMessage>> updatesHandler = new List<IUpdatesHandler<IIncomingMessage>>()
-        {
-            new TextMessageHandler(),
-            new MenuMessageHandler()
-        };
 
-        static List<IUpdatesResultHandler<IIncomingMessage>> responseHandler = new List<IUpdatesResultHandler<IIncomingMessage>>()
-        {
-            new ConfirmationHandler(),
-        };
-
-        // GET: api/<controller>
-        //[HttpGet]
-        //public IActionResult Get()
-        //{
-        //    return Forbid();
-        //}
+        private List<IUpdatesHandler<IIncomingMessage>> _updatesHandlers;
+        private List<IUpdatesResultHandler<IIncomingMessage>> _responseHandlers;
 
         // POST api/values
         [HttpPost]
@@ -61,7 +51,7 @@ namespace StirkaBot.Controllers
                 cache.Add(cacheKey, message, DateTime.Now.AddMinutes(5));
                 //todo: separate interface for Task<HandlerResult>
                 //handle logic with response to vk
-                foreach (var handler in responseHandler)
+                foreach (var handler in _responseHandlers)
                 {
                     if (handler.CanHandle(message, bot))
                     {
@@ -71,7 +61,7 @@ namespace StirkaBot.Controllers
                 }
                 //todo: separate interface for Task 
                 //handle bot requests
-                foreach (var handler in updatesHandler)
+                foreach (var handler in _updatesHandlers)
                 {
                     if (handler.CanHandle(message, bot))
                     {

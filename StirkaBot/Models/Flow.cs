@@ -22,6 +22,10 @@ namespace StirkaBot.Models
             }
             return this;
         }
+        public Node getNextNode(string nodeId, string linkId)
+        {
+            return nodes[nodeId].links[linkId].node;
+        }
 
         public class Node
         {

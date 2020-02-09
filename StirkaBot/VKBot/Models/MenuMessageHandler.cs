@@ -8,7 +8,13 @@ namespace StirkaBot.VKBot.Models
 {
     public class MenuMessageHandler : IUpdatesHandler<IIncomingMessage>
     {
-        
+        private StirkaBot.Models.Flow _flow;
+
+        public MenuMessageHandler(StirkaBot.Models.Flow flow)
+        {
+            _flow = flow;
+        }
+
         //FlowClass
         static string[] _messageTypes = new[] { "message_new", "message_reply" };
 
@@ -20,40 +26,14 @@ namespace StirkaBot.VKBot.Models
         }
         public async Task HandleAsync(IIncomingMessage message, IVKBot bot)
         {
-            var flow = new StirkaBot.Services.FlowService(null).initFlow();
-
             JObject payload = JObject.Parse(message.payload);
 
             string nodeId = payload["command"] != null ? "0" : payload["node"].ToString();
             string linkId = payload["command"] != null ? "0" : payload["link"].ToString();
 
-            var node = flow.nodes[nodeId];
-            var link = node.links[linkId];
-            var nextNode = link.node;
+            var nextNode = _flow.getNextNode(nodeId, linkId);
 
-            var keyboard = JObject.FromObject(new
-            {
-                one_time = false,
-                buttons = nextNode.links.Select(t => new[]
-                {
-                        new
-                        {
-                            action = new
-                            {
-                                type = "text",
-                                payload = JObject.FromObject(new
-                                {
-                                    node = nextNode.id,
-                                    link = t.Value.id,
-                                    label = t.Value.label
-                                }).ToString(),
-                                label = t.Value.label
-                            },
-                            color = t.Value.color
-                        }
-                    })
-            });
-
+            var keyboard = Services.FlowService.convertToKeyboard(nextNode);
 
             var outgoingMessage = new OutgoingMessage()
             {
