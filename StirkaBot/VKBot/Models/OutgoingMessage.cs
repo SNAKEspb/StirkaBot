@@ -13,5 +13,6 @@ namespace StirkaBot.VKBot.Models
         public string message { get; set; }
         public string attachment { get; set; }
         public string group_id { get; set; }
+        public string keyboard { get; set; }
     }
 }

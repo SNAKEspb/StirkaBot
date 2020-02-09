@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using StirkaBot.VKBot.Models;
 
@@ -31,7 +32,8 @@ namespace StirkaBot.Services
                     { "random_id", message.random_id},
                     { "peer_id", message.peer_id.ToString()},
                     { "message", message.message},
-                    { "attachment", message.attachment }
+                    { "attachment", message.attachment },
+                    { "keyboard", message.keyboard }
                 };
 
             var content = new FormUrlEncodedContent(values);
@@ -40,5 +42,31 @@ namespace StirkaBot.Services
             _logger.Log(NLog.LogLevel.Info, responseBody);
             return true;
         }
+
+        //public async Task<bool> menuSendAsync(OutgoingMessage message, string groupId, string token, string apiVersion)
+        //{
+        //    var urlBuilder = new UriBuilder(_url)
+        //    {
+        //        Path = "method/messages.send",
+        //        Query = $"group_id={groupId}&access_token={token}&v={apiVersion}"
+        //    };
+        //    _logger.Log(NLog.LogLevel.Info, urlBuilder);
+
+        //    var values = new Dictionary<string, string>
+        //        {
+        //            { "random_id", message.random_id},
+        //            { "peer_id", message.peer_id.ToString()},
+        //            { "message", message.message},
+        //            { "attachment", message.attachment },
+        //            { "keyboard", message.keyboard }
+        //        };
+
+        //    //var content = new StringContent(jObject.ToString(), Encoding.UTF8, "application/x-www-form-urlencoded");
+        //    var content = new FormUrlEncodedContent(values);
+        //    var response = await _httpClient.PostAsync(urlBuilder.Uri, content);
+        //    var responseBody = await response.Content.ReadAsStringAsync();
+        //    _logger.Log(NLog.LogLevel.Info, responseBody);
+        //    return true;
+        //}
     }
 }

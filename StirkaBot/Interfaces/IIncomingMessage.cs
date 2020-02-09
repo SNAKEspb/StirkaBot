@@ -15,6 +15,7 @@ namespace StirkaBot
 
         string text { get; }
         List<dynamic> attachments { get; }
+        string payload { get; }
 
     }
   

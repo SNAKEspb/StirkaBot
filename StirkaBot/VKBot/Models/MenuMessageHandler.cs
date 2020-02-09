@@ -16,6 +16,7 @@ namespace StirkaBot.VKBot.Models
         }
         public async Task HandleAsync(IIncomingMessage message, IVKBot bot)
         {
+            
         }
     }
 }

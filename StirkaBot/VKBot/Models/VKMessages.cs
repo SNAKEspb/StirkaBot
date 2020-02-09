@@ -8,16 +8,25 @@ namespace StirkaBot.VKBot.Models
     public class UpdateMessage : IIncomingMessage
     {
         public string type { get; set; }
-        public UpdateMessageData @object { get; set; }
+        public UpdateMessageObject @object { get; set; }
         public int group_id { get; set; }
+        public string event_id { get; set; }
+        public string payload { get; set; }
 
-        public string peer_id => @object != null ? @object.peer_id.ToString() : null;
+        public string peer_id => @object != null ? @object.message.peer_id.ToString() : null;
         public string MessageType => type;
-        public string from_id => @object != null ? @object.from_id.ToString() : null;
-        public string date => @object != null ? @object.date.ToString() : null;//DateTime.Now.ToString();
+        public string from_id => @object != null ? @object.message.from_id.ToString() : null;
+        public string date => @object != null ? @object.message.date.ToString() : null;//DateTime.Now.ToString();
 
-        public string text => @object != null ? @object.text : null;
-        public List<dynamic> attachments => @object.attachments;
+        public string text => @object != null ? @object.message.text : null;
+        public List<dynamic> attachments => @object.message.attachments;
+    }
+
+    public class UpdateMessageObject
+    {
+        public UpdateMessageData message;
+        public UpdateMessageClientInfo client_info;
+
     }
 
     public class UpdateMessageData
@@ -29,7 +38,7 @@ namespace StirkaBot.VKBot.Models
         public int peer_id { get; set; }
         public string text { get; set; }
         public int conversation_message_id { get; set; }
-        public UpdateMessageDataAction action { get; set; }
+        //public UpdateMessageDataAction action { get; set; }
         public List<object> fwd_messages { get; set; }
         public bool important { get; set; }
         public int random_id { get; set; }
@@ -37,10 +46,31 @@ namespace StirkaBot.VKBot.Models
         public bool is_hidden { get; set; }
     }
 
+    public class UpdateMessageClientInfo
+    {
+        List<object> button_actions { get; set; }
+        public bool keyboard { get; set; }
+        public bool inline_keyboard { get; set; }
+        public int lang_id { get; set; }
+    }
+
     public class UpdateMessageDataAction
     {
         public string type { get; set; }
         public int member_id { get; set; }
+    }
+
+    public class MenuButton
+    {
+        public MenuAction action { get; set; }
+        public string color { get; set; } //optional
+    }
+
+    public class MenuAction
+    {
+        public string type { get; set; }
+        public string payload { get; set; }
+        public string label { get; set; } //optional
     }
 
 
