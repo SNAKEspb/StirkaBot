@@ -41,7 +41,7 @@ namespace StirkaBot.VKBot
         }
 
         public string confimationCode => _confirmationCode;
-        public async Task<bool> SendMessageAsync(IOutgoingMessage message)
+        public async Task<bool> sendMessageAsync(IOutgoingMessage message)
         {
             try
             {
@@ -67,83 +67,80 @@ namespace StirkaBot.VKBot
                 //    link = "1"
                 //}).ToString();
 
-                JObject payload = JObject.Parse(message.payload);
+                //{
+                //    JObject payload = JObject.Parse(message.payload);
+                //}
 
-                string nodeId = payload["command"].ToString() == "start" || message.text == "Начать" ? "0" : payload["node"].ToString();
-                string linkId = payload["command"].ToString() == "start" || message.text == "Начать" ? "0" : payload["node"].ToString();
+                //string nodeId = payload["command"].ToString() == "start" || message.text == "Начать" ? "0" : payload["node"].ToString();
+                //string linkId = payload["command"].ToString() == "start" || message.text == "Начать" ? "0" : payload["link"].ToString();
 
-                var node = flow.nodes[nodeId];
-                var link = node.links[linkId];
+                //var node = flow.nodes[nodeId];
+                //var link = node.links[linkId];
 
-                var keyboard = JObject.FromObject(new
-                {
-                    one_time = false,
-                    buttons = link.node.links.Select(t => new[]
-                    {
-                        new
-                        {
-                            action = new
-                            {
-                                type = "text",
-                                payload = JObject.FromObject(new
-                                {
-                                    node = link.node.id,
-                                    link = t.Value.id,
-                                    label = t.Value.label
-                                }).ToString(),
-                                label = t.Value.label
-                            },
-                            color = t.Value.color
-                        }
-                    })
-                });
-
-                //new[] {
-
-                //            new[] {
-                //                new {
-                //                    action = new {
-                //                        type = "text",
-                //                        payload = "{\"button\": \"1\"}",
-                //                        label = "Negative"
-                //                    },
-                //                    color = "negative"
-                //                },
-                //                new {
-                //                    action = new {
-                //                        type = "text",
-                //                        payload = "{\"button\": \"2\"}",
-                //                        label = "Positive"
-                //                    },
-                //                    color = "positive"
-                //                },
-                //                new {
-                //                    action = new {
-                //                        type = "text",
-                //                        payload = "{\"button\": \"3\"}",
-                //                        label = "Primary"
-                //                    },
-                //                    color = "primary"
-                //                },
-                //                new {
-                //                    action = new {
-                //                        type = "text",
-                //                        payload = "{\"button\": \"4\"}",
-                //                        label = "Secondary"
-                //                    },
-                //                    color = "secondary"
-                //                },
+                //var keyboard = JObject.FromObject(new
+                //{
+                //    one_time = false,
+                //    buttons = link.node.links.Select(t => new[]
+                //    {
+                //        new
+                //        {
+                //            action = new
+                //            {
+                //                type = "text",
+                //                payload = JObject.FromObject(new
+                //                {
+                //                    node = link.node.id,
+                //                    link = t.Value.id,
+                //                    label = t.Value.label
+                //                }).ToString(),
+                //                label = t.Value.label
                 //            },
-                //    }
+                //            color = t.Value.color
+                //        }
+                //    })
+                //});
 
-                var outgoingMessage = new OutgoingMessage()
-                {
-                    peer_id = message.peer_id,
-                    message = DateTime.Now.ToString(),
-                    keyboard = keyboard.ToString()
-                };
+                ////new[] {
 
-                await vkService.messagesSendAsync(outgoingMessage, _groupId, _token, _apiVersion);
+                ////            new[] {
+                ////                new {
+                ////                    action = new {
+                ////                        type = "text",
+                ////                        payload = "{\"button\": \"1\"}",
+                ////                        label = "Negative"
+                ////                    },
+                ////                    color = "negative"
+                ////                },
+                ////                new {
+                ////                    action = new {
+                ////                        type = "text",
+                ////                        payload = "{\"button\": \"2\"}",
+                ////                        label = "Positive"
+                ////                    },
+                ////                    color = "positive"
+                ////                },
+                ////                new {
+                ////                    action = new {
+                ////                        type = "text",
+                ////                        payload = "{\"button\": \"3\"}",
+                ////                        label = "Primary"
+                ////                    },
+                ////                    color = "primary"
+                ////                },
+                ////                new {
+                ////                    action = new {
+                ////                        type = "text",
+                ////                        payload = "{\"button\": \"4\"}",
+                ////                        label = "Secondary"
+                ////                    },
+                ////                    color = "secondary"
+                ////                },
+                ////            },
+                ////    }
+
+
+
+                //await vkService.messagesSendAsync(outgoingMessage, _groupId, _token, _apiVersion);
             }
             catch (Exception ex)
             {

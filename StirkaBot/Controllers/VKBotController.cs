@@ -19,6 +19,7 @@ namespace StirkaBot.Controllers
         static List<IUpdatesHandler<IIncomingMessage>> updatesHandler = new List<IUpdatesHandler<IIncomingMessage>>()
         {
             new TextMessageHandler(),
+            new MenuMessageHandler()
         };
 
         static List<IUpdatesResultHandler<IIncomingMessage>> responseHandler = new List<IUpdatesResultHandler<IIncomingMessage>>()
