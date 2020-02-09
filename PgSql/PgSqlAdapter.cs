@@ -1,12 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System;
 using System.Data.Common;
-using System.Linq;
 using System.Threading.Tasks;
 using Npgsql;
-using NpgsqlTypes;
 
 namespace PgSql
 {
