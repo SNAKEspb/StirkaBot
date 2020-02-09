@@ -27,11 +27,12 @@ namespace StirkaBot.VKBot.Models
 
             var node = flow.nodes[nodeId];
             var link = node.links[linkId];
+            var nextNode = link.node;
 
             var keyboard = JObject.FromObject(new
             {
                 one_time = false,
-                buttons = link.node.links.Select(t => new[]
+                buttons = nextNode.links.Select(t => new[]
                 {
                         new
                         {
@@ -40,7 +41,7 @@ namespace StirkaBot.VKBot.Models
                                 type = "text",
                                 payload = JObject.FromObject(new
                                 {
-                                    node = link.node.id,
+                                    node = nextNode.id,
                                     link = t.Value.id,
                                     label = t.Value.label
                                 }).ToString(),
@@ -55,7 +56,7 @@ namespace StirkaBot.VKBot.Models
             var outgoingMessage = new OutgoingMessage()
             {
                 peer_id = message.peer_id,
-                message = DateTime.Now.ToString(),
+                message = nextNode.label,
                 keyboard = keyboard.ToString()
             };
             await bot.sendMessageAsync(outgoingMessage);

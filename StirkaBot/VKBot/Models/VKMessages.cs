@@ -11,7 +11,7 @@ namespace StirkaBot.VKBot.Models
         public UpdateMessageObject @object { get; set; }
         public int group_id { get; set; }
         public string event_id { get; set; }
-        public string payload { get; set; }
+        public string payload => @object != null ? @object.message.payload.ToString() : null;
 
         public string peer_id => @object != null ? @object.message.peer_id.ToString() : null;
         public string MessageType => type;
@@ -44,6 +44,8 @@ namespace StirkaBot.VKBot.Models
         public int random_id { get; set; }
         public List<object> attachments { get; set; }
         public bool is_hidden { get; set; }
+        public string payload { get; set; }
+
     }
 
     public class UpdateMessageClientInfo
