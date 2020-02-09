@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.1000
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StirkaBot", "StirkaBot\StirkaBot.csproj", "{FD8172EF-B7BC-4B6A-9220-3E4C0BDCC36B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StirkaBot", "StirkaBot\StirkaBot.csproj", "{FD8172EF-B7BC-4B6A-9220-3E4C0BDCC36B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PgSql", "PgSql\PgSql.csproj", "{DBCF5572-8289-4FAF-8D90-D0C1775CE6B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{FD8172EF-B7BC-4B6A-9220-3E4C0BDCC36B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD8172EF-B7BC-4B6A-9220-3E4C0BDCC36B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD8172EF-B7BC-4B6A-9220-3E4C0BDCC36B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBCF5572-8289-4FAF-8D90-D0C1775CE6B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBCF5572-8289-4FAF-8D90-D0C1775CE6B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBCF5572-8289-4FAF-8D90-D0C1775CE6B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBCF5572-8289-4FAF-8D90-D0C1775CE6B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

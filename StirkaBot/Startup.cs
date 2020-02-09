@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using static PgSql.ServiceExtensions;
 using StirkaBot.VKBot.Models;
 
 namespace StirkaBot
@@ -27,6 +28,7 @@ namespace StirkaBot
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddPostgreSql(Configuration);
             services.AddSingleton<StirkaBot.Models.Flow>(new StirkaBot.Services.FlowService(null).initFlow());
 
             services.AddSingleton< List<IUpdatesHandler<IIncomingMessage>>>( (p) => new List<IUpdatesHandler<IIncomingMessage>>()
