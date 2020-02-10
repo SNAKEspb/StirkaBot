@@ -43,14 +43,14 @@ namespace StirkaBot.Controllers
                 //check chache
                 //if cache already contains the message, then return ok result, else proceed
                 ObjectCache cache = MemoryCache.Default;
-                var cacheKey = message.peer_id + message.MessageType + message.from_id + message.date;
+                var cacheKey = message.peer_id + message.MessageType + message.from_id + message.date + (message.payload != null ? message.text + message.payload : "");
                 if (cache[cacheKey] != null)
                 {
                     _logger.Log(NLog.LogLevel.Info, $"cache key found: {cacheKey}");
                     return Ok("ok");
                 }
                 cache.Add(cacheKey, message, DateTime.Now.AddMinutes(5));
-                //todo: separate interface for Task<HandlerResult>
+
                 //handle logic with response to vk
                 foreach (var handler in _responseHandlers)
                 {
@@ -60,7 +60,7 @@ namespace StirkaBot.Controllers
                         return Ok(result.message);
                     }
                 }
-                //todo: separate interface for Task 
+
                 //handle bot requests
                 foreach (var handler in _updatesHandlers)
                 {

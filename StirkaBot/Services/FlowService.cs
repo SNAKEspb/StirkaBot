@@ -33,6 +33,7 @@ namespace StirkaBot.Services
             var cleanlinessPhoto = new Flow.Node() { label = "Пришлите фотографию" };
             var commonPhoto = new Flow.Node() { label = "Общее фото объекта" };
             var issues = new Flow.Node() { label = "Осуществлен ремонт/устранение проблем" };
+            var issuesRepeat = new Flow.Node() { label = "" };
             var issuesNumberInput = new Flow.Node() { label = "Введите номер машины" };
             var issuesWorkInput = new Flow.Node() { label = "Напишите что было сделано" };
             var issuesInput = new Flow.Node() { label = "Опишите проблему" };
@@ -59,20 +60,23 @@ namespace StirkaBot.Services
 
             commonPhoto.add(getNextLink(issues));
 
-            issues.add(new Flow.Link() { label = "Номер машины", node = issuesNumberInput })
-                .add(new Flow.Link() { label = "Помпа", node = issues })
-                .add(new Flow.Link() { label = "Щетки", node = issues })
-                .add(new Flow.Link() { label = "Резинка дверцы", node = issues })
-                .add(new Flow.Link() { label = "Шланг", node = issues })
-                .add(new Flow.Link() { label = "Бункер порошка", node = issues })
-                .add(new Flow.Link() { label = "Кнопка залипла", node = issues })
-                .add(new Flow.Link() { label = "Планшет", node = issues })
-                .add(new Flow.Link() { label = "Зажевало купюру", node = issues })
-                .add(new Flow.Link() { label = "Неисправен монетник", node = issues })
-                .add(new Flow.Link() { label = "Фильтр", node = issues })
-                .add(new Flow.Link() { label = "Датчик", node = issues })
+            issues.add(new Flow.Link() { label = "Номер машины", node = issuesNumberInput, color = COLOR_NEGATIVE })
                 .add(getOtherLink(issuesInput))
-                .add(getNextLink(collection));
+                .add(getNextLink(collection))
+                .add(new Flow.Link() { label = "Помпа", node = issuesRepeat })
+                .add(new Flow.Link() { label = "Щетки", node = issuesRepeat })
+                .add(new Flow.Link() { label = "Резинка дверцы", node = issuesRepeat })
+                .add(new Flow.Link() { label = "Шланг", node = issuesRepeat })
+                .add(new Flow.Link() { label = "Бункер порошка", node = issuesRepeat })
+                .add(new Flow.Link() { label = "Кнопка залипла", node = issuesRepeat })
+                .add(new Flow.Link() { label = "Планшет", node = issuesRepeat })
+                .add(new Flow.Link() { label = "Зажевало купюру", node = issuesRepeat })
+                .add(new Flow.Link() { label = "Неисправен монетник", node = issuesRepeat })
+                .add(new Flow.Link() { label = "Фильтр", node = issuesRepeat })
+                .add(new Flow.Link() { label = "Датчик", node = issuesRepeat });
+
+            issuesRepeat.add(issues.links.Select(t => t.Value).ToList());
+
 
             issuesNumberInput.add(getNextLink(issuesWorkInput));
             issuesWorkInput.add(getNextLink(issues));
@@ -86,7 +90,7 @@ namespace StirkaBot.Services
 
             end.add(getStartLink(address));
 
-            flow.add(new List<Flow.Node>() { 
+            flow.add(new List<Flow.Node>() {
                 start,
                 address,
                 goal,
@@ -120,6 +124,30 @@ namespace StirkaBot.Services
             return new Flow.Link() { label = "Начать", node = node, color = COLOR_PRIMARY };
         }
 
+        public static void makeFlat(Flow flow)
+        {
+            //node and links ids are numbers
+            var orderedNodes = flow.nodes.OrderBy(t => t.Key);
+            var nodes = orderedNodes.Select(t => t.Value);
+            var links = orderedNodes.SelectMany(t => t.Value.links.Select(link => new { parent = t.Value, child = link.Value }))
+                .OrderBy(t => t.parent.id)
+                .ThenBy(t => t.child.node.id);
+
+            //from flat to flow
+            var newFlow = new Flow();
+            foreach (var node in nodes)
+            {
+                newFlow.add(new Flow.Node() { id = node.id, label = node.label});
+            }
+
+            foreach (var link in links)
+            {
+                var parent = flow.nodes[link.parent.id];
+                var child = flow.nodes[link.child.node.id];
+                parent.add(new Flow.Link() { node = child, label = link.child.label, color = link.child.color });//no need to set id
+            }
+        }
+
         public static string convertToKeyboard(Flow.Node node)
         {
             //convert to buttons
@@ -140,7 +168,7 @@ namespace StirkaBot.Services
                     color = t.Value.color
                 }
             ).ToList();
-            
+
             //split by chunks(max button rows amount = 10)
             int chunkSize = (int)Math.Ceiling((decimal)buttons.Count / 10);
 

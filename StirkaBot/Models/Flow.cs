@@ -10,7 +10,10 @@ namespace StirkaBot.Models
         public Dictionary<String, Node> nodes = new Dictionary<string, Node>();
         public Flow add(Node node)
         {
-            node.id = nodes.Count.ToString();
+            if (node.id == null)
+            {
+                node.id = nodes.Count.ToString();
+            }
             nodes.Add(node.id, node);
             return this;
         }
@@ -30,7 +33,7 @@ namespace StirkaBot.Models
         public class Node
         {
             public string label;
-            public string color;
+            //public string color;
 
             public string id;
             public Dictionary<String, Link> links = new Dictionary<string, Link>();
