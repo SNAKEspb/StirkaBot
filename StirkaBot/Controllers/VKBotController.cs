@@ -14,12 +14,13 @@ namespace StirkaBot.Controllers
     [ApiController]
     public class VKBotController : ControllerBase
     {
-        public VKBotController(List<IUpdatesHandler<IIncomingMessage>> updatesHandlers, List<IUpdatesResultHandler<IIncomingMessage>> responseHandlers) {
+        public VKBotController(IVKBot bot, List<IUpdatesHandler<IIncomingMessage>> updatesHandlers, List<IUpdatesResultHandler<IIncomingMessage>> responseHandlers) {
+            _bot = bot;
             _updatesHandlers = updatesHandlers;
             _responseHandlers = responseHandlers;
         }
         static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
-        static IVKBot bot = VKBot.VKBot.getInstanse(_logger);
+        private IVKBot _bot;
 
         private List<IUpdatesHandler<IIncomingMessage>> _updatesHandlers;
         private List<IUpdatesResultHandler<IIncomingMessage>> _responseHandlers;
@@ -30,7 +31,7 @@ namespace StirkaBot.Controllers
         {
             string messageBody = Util.getRawBody(HttpContext.Request.Body);
             _logger.Log(NLog.LogLevel.Info, $"Start bot process {messageBody}");
-            var process = ProcessMessagesAsync(bot, messageBody);
+            var process = ProcessMessagesAsync(_bot, messageBody);
             _logger.Log(NLog.LogLevel.Info, $"End bot process {process}");
             return process;
         }

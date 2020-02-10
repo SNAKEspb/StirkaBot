@@ -26,6 +26,12 @@ namespace StirkaBot.VKBot.Models
         }
         public async Task HandleAsync(IIncomingMessage message, IVKBot bot)
         {
+            int i = 0;
+            while (i < 100000000)
+            {
+                i++;
+            }
+            NLog.LogManager.GetCurrentClassLogger().Log(NLog.LogLevel.Info, $"cache key found: {i}");
             JObject payload = JObject.Parse(message.payload);
 
             string nodeId = payload["command"] != null ? "0" : payload["node"].ToString();

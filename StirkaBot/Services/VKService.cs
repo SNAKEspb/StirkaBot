@@ -28,13 +28,13 @@ namespace StirkaBot.Services
             };
             _logger.Log(NLog.LogLevel.Info, urlBuilder);
             var values = new Dictionary<string, string>
-                {
-                    { "random_id", message.random_id},
-                    { "peer_id", message.peer_id.ToString()},
-                    { "message", message.message},
-                    { "attachment", message.attachment },
-                    { "keyboard", message.keyboard }
-                };
+            {
+                { "random_id", message.random_id},
+                { "peer_id", message.peer_id.ToString()},
+                { "message", message.message},
+                { "attachment", message.attachment },
+                { "keyboard", message.keyboard }
+            };
 
             var content = new FormUrlEncodedContent(values);
             var response = await _httpClient.PostAsync(urlBuilder.Uri, content);

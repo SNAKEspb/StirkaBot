@@ -2,6 +2,7 @@
 using System.Data.Common;
 using System.Threading.Tasks;
 using Npgsql;
+using Microsoft.Extensions.Options;
 
 namespace PgSql
 {
@@ -9,6 +10,10 @@ namespace PgSql
     {
         protected string ConnectionString;
 
+        public PgSqlAdapter(IOptions<ConnectionOptions> options)
+            :this(options.Value)
+        { 
+        }
         public PgSqlAdapter(ConnectionOptions options) 
             :this($"User ID={options.User};Password={options.Password};Host={options.Host};Port={options.Port};Database={options.DataBase};Pooling=true;Maximum Pool Size=20; Timeout = 300;")
         {

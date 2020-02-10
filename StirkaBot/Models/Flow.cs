@@ -59,6 +59,7 @@ namespace StirkaBot.Models
         {
             public string label;
             public string color;
+            public bool isInput;
 
             public string id;
             public Node node;

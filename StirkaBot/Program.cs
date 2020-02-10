@@ -23,8 +23,6 @@ namespace StirkaBot
                 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
                 logger.Debug("init main");
                 CreateWebHostBuilder(args).Build().Run();
-                //init bot and services
-                VKBot.VKBot.getInstanse(logger);
             }
             catch (Exception ex)
             {

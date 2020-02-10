@@ -33,7 +33,7 @@ namespace StirkaBot.Services
             var cleanlinessPhoto = new Flow.Node() { label = "Пришлите фотографию" };
             var commonPhoto = new Flow.Node() { label = "Общее фото объекта" };
             var issues = new Flow.Node() { label = "Осуществлен ремонт/устранение проблем" };
-            var issuesRepeat = new Flow.Node() { label = "" };
+            //var issuesRepeat = new Flow.Node() { label = "" };
             var issuesNumberInput = new Flow.Node() { label = "Введите номер машины" };
             var issuesWorkInput = new Flow.Node() { label = "Напишите что было сделано" };
             var issuesInput = new Flow.Node() { label = "Опишите проблему" };
@@ -60,22 +60,22 @@ namespace StirkaBot.Services
 
             commonPhoto.add(getNextLink(issues));
 
-            issues.add(new Flow.Link() { label = "Номер машины", node = issuesNumberInput, color = COLOR_NEGATIVE })
-                .add(getOtherLink(issuesInput))
+            issues.add(getOtherLink(issuesInput))
                 .add(getNextLink(collection))
-                .add(new Flow.Link() { label = "Помпа", node = issuesRepeat })
-                .add(new Flow.Link() { label = "Щетки", node = issuesRepeat })
-                .add(new Flow.Link() { label = "Резинка дверцы", node = issuesRepeat })
-                .add(new Flow.Link() { label = "Шланг", node = issuesRepeat })
-                .add(new Flow.Link() { label = "Бункер порошка", node = issuesRepeat })
-                .add(new Flow.Link() { label = "Кнопка залипла", node = issuesRepeat })
-                .add(new Flow.Link() { label = "Планшет", node = issuesRepeat })
-                .add(new Flow.Link() { label = "Зажевало купюру", node = issuesRepeat })
-                .add(new Flow.Link() { label = "Неисправен монетник", node = issuesRepeat })
-                .add(new Flow.Link() { label = "Фильтр", node = issuesRepeat })
-                .add(new Flow.Link() { label = "Датчик", node = issuesRepeat });
+                .add(new Flow.Link() { label = "Номер машины", node = issuesNumberInput, color = COLOR_NEGATIVE })
+                .add(new Flow.Link() { label = "Помпа", node = issues })
+                .add(new Flow.Link() { label = "Щетки", node = issues })
+                .add(new Flow.Link() { label = "Резинка дверцы", node = issues })
+                .add(new Flow.Link() { label = "Шланг", node = issues })
+                .add(new Flow.Link() { label = "Бункер порошка", node = issues })
+                .add(new Flow.Link() { label = "Кнопка залипла", node = issues })
+                .add(new Flow.Link() { label = "Планшет", node = issues })
+                .add(new Flow.Link() { label = "Зажевало купюру", node = issues })
+                .add(new Flow.Link() { label = "Неисправен монетник", node = issues })
+                .add(new Flow.Link() { label = "Фильтр", node = issues })
+                .add(new Flow.Link() { label = "Датчик", node = issues });
 
-            issuesRepeat.add(issues.links.Select(t => t.Value).ToList());
+            //issuesRepeat.add(issues.links.Select(t => t.Value).ToList());
 
 
             issuesNumberInput.add(getNextLink(issuesWorkInput));
@@ -99,6 +99,7 @@ namespace StirkaBot.Services
                 cleanlinessPhoto,
                 commonPhoto,
                 issues,
+                //issuesRepeat,
                 issuesNumberInput,
                 issuesWorkInput,
                 issuesInput,
@@ -150,6 +151,11 @@ namespace StirkaBot.Services
 
         public static string convertToKeyboard(Flow.Node node)
         {
+            if (node.id == null)
+            {
+                throw new ArgumentNullException($"Node id could not be null");
+            }
+
             //convert to buttons
             var buttons = node.links.Select(t =>
                 new VKBot.Models.MenuButton()

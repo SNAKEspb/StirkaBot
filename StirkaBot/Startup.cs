@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using static PgSql.ServiceExtensions;
-using StirkaBot.VKBot.Models;
+using static StirkaBot.VKBot.ServiceExtensions;
 
 namespace StirkaBot
 {
@@ -29,18 +29,8 @@ namespace StirkaBot
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddPostgreSql(Configuration);
-            services.AddSingleton<StirkaBot.Models.Flow>(new StirkaBot.Services.FlowService(null).initFlow());
+            services.AddVKBot(Configuration);
 
-            services.AddSingleton< List<IUpdatesHandler<IIncomingMessage>>>( (p) => new List<IUpdatesHandler<IIncomingMessage>>()
-                    {
-                        new TextMessageHandler(p.GetService<StirkaBot.Models.Flow>()),
-                        new MenuMessageHandler(p.GetService<StirkaBot.Models.Flow>()),
-                    });
-
-            services.AddSingleton<List<IUpdatesResultHandler<IIncomingMessage>>>((p) => new List<IUpdatesResultHandler<IIncomingMessage>>()
-                    {
-                        new ConfirmationHandler(),
-                    });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
