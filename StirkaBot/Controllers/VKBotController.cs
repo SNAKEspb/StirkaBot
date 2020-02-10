@@ -43,7 +43,7 @@ namespace StirkaBot.Controllers
                 //check chache
                 //if cache already contains the message, then return ok result, else proceed
                 ObjectCache cache = MemoryCache.Default;
-                var cacheKey = message.peer_id + message.MessageType + message.from_id + message.date + (message.payload != null ? message.text + message.payload : "");
+                var cacheKey = message.peer_id + message.MessageType + message.from_id + message.date + (message.payload != null ? message.text : "");
                 if (cache[cacheKey] != null)
                 {
                     _logger.Log(NLog.LogLevel.Info, $"cache key found: {cacheKey}");
