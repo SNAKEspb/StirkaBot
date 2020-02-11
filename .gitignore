@@ -348,3 +348,5 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+/StirkaBot/appsettings-StirkaBot.json
+/StirkaBot/appsettings-StirkaBot-test.json
