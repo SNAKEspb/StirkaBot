@@ -28,7 +28,7 @@ namespace StirkaBot.Services
             var start = new Flow.Node() { label = "" };
             var address = new Flow.Node() { label = "Введите Адрес" };
             var goal = new Flow.Node() { label = "Цель визита" };
-            var goalInput = new Flow.Node() { label = "Ввидите цель визита" };
+            var goalInput = new Flow.Node() { label = "Введите цель визита" };
             var cleanliness = new Flow.Node() { label = "Чистота в прачечной" };
             var cleanlinessPhoto = new Flow.Node() { label = "Пришлите фотографию" };
             var commonPhoto = new Flow.Node() { label = "Общее фото объекта" };
@@ -38,8 +38,8 @@ namespace StirkaBot.Services
             var issuesWorkInput = new Flow.Node() { label = "Напишите что было сделано" };
             var issuesInput = new Flow.Node() { label = "Опишите проблему" };
             var collection = new Flow.Node() { label = "Была ли инкассация" };
-            var collectionPhoto = new Flow.Node() { label = "Пришлите фотографию" };
-            var end = new Flow.Node() { label = "Окончание визита" };
+            var collectionPhoto = new Flow.Node() { label = "Пришлите фотографию или напишите сумму" };
+            var end = new Flow.Node() { label = "Окончание визита\n===========================" };
 
             start.add(getStartLink(address));
 
