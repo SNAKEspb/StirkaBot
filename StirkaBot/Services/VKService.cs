@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using StirkaBot.VKBot.Models;
@@ -19,54 +20,24 @@ namespace StirkaBot.Services
             _logger = logger;
         }
 
-        public async Task<bool> messagesSendAsync(OutgoingMessage message, string groupId, string token, string apiVersion)
-        {
+        public async Task<string> sendRequest(IOutgoingMessage message, string method, VKBotOptions options) {
             var urlBuilder = new UriBuilder(_url)
             {
-                Path = "method/messages.send",
-                Query = $"group_id={groupId}&access_token={token}&v={apiVersion}"
+                Path = $"method/{method}",
+                Query = $"group_id={options.groupId}&access_token={options.token}&v={options.apiVersion}"
             };
             _logger.Log(NLog.LogLevel.Info, urlBuilder);
-            var values = new Dictionary<string, string>
-            {
-                { "random_id", message.random_id},
-                { "peer_id", message.peer_id.ToString()},
-                { "message", message.message},
-                { "attachment", message.attachment },
-                { "keyboard", message.keyboard }
-            };
-
+            var values = message.GetType()
+                .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .Select(t=> new { key = t.Name, value = t.GetValue(message, null)})
+                .Where(t=> t.value != null)
+                .ToDictionary(t => t.key, t => t.value.ToString());
             var content = new FormUrlEncodedContent(values);
             var response = await _httpClient.PostAsync(urlBuilder.Uri, content);
             var responseBody = await response.Content.ReadAsStringAsync();
             _logger.Log(NLog.LogLevel.Info, responseBody);
-            return true;
+            return responseBody;
         }
 
-        //public async Task<bool> menuSendAsync(OutgoingMessage message, string groupId, string token, string apiVersion)
-        //{
-        //    var urlBuilder = new UriBuilder(_url)
-        //    {
-        //        Path = "method/messages.send",
-        //        Query = $"group_id={groupId}&access_token={token}&v={apiVersion}"
-        //    };
-        //    _logger.Log(NLog.LogLevel.Info, urlBuilder);
-
-        //    var values = new Dictionary<string, string>
-        //        {
-        //            { "random_id", message.random_id},
-        //            { "peer_id", message.peer_id.ToString()},
-        //            { "message", message.message},
-        //            { "attachment", message.attachment },
-        //            { "keyboard", message.keyboard }
-        //        };
-
-        //    //var content = new StringContent(jObject.ToString(), Encoding.UTF8, "application/x-www-form-urlencoded");
-        //    var content = new FormUrlEncodedContent(values);
-        //    var response = await _httpClient.PostAsync(urlBuilder.Uri, content);
-        //    var responseBody = await response.Content.ReadAsStringAsync();
-        //    _logger.Log(NLog.LogLevel.Info, responseBody);
-        //    return true;
-        //}
     }
 }

@@ -8,7 +8,7 @@ namespace StirkaBot
     public interface IVKBot
     {
         string confimationCode { get; }
-        Task<bool> sendMessageAsync(IOutgoingMessage message);
+        Task<string> sendMessageAsync(IOutgoingMessage message);
         //Task processTextMessage(IIncomingMessage message);
         //Task processMenuMessage(IIncomingMessage message);
         //Task processPhotoMessage(IIncomingMessage message);
