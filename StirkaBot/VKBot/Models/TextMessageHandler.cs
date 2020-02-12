@@ -38,7 +38,7 @@ namespace StirkaBot.VKBot.Models
             var outgoingMessage = new OutgoingMessage()
             {
                 peer_id = message.peer_id,
-                message = ">>" + nextNode.label,
+                message = "> " + nextNode.label,
                 keyboard = keyboard.ToString()
             };
             await bot.sendMessageAsync(outgoingMessage);
