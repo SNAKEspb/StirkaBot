@@ -29,9 +29,6 @@ namespace StirkaBot.VKBot
             {
                 var tmessage = (OutgoingMessage)message;
 
-                await messagesGetHistory(tmessage);
-                await messagesGetConversations(tmessage);
-
                 return await vkService.sendRequest(tmessage, "messages.send", _options);
             }
             catch (Exception e)
