@@ -30,6 +30,11 @@ namespace StirkaBot.Models
             return nodes[nodeId].links[linkId].node;
         }
 
+        public Link getCurrentLink(string nodeId, string linkId)
+        {
+            return nodes[nodeId].links[linkId];
+        }
+
         public class Node
         {
             public string label;
@@ -59,7 +64,7 @@ namespace StirkaBot.Models
         {
             public string label;
             public string color;
-            public bool isInput;
+            public string type;
 
             public string id;
             public Node node;

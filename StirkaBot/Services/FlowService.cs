@@ -26,7 +26,7 @@ namespace StirkaBot.Services
             var flow = new Flow();
 
             var start = new Flow.Node() { label = "" };
-            var address = new Flow.Node() { label = "Введите Адрес" };
+            var address = new Flow.Node() { label = "Введите или выбирите адрес" };
             var goal = new Flow.Node() { label = "Цель визита" };
             var goalInput = new Flow.Node() { label = "Введите цель визита" };
             var cleanliness = new Flow.Node() { label = "Чистота в прачечной" };
@@ -44,6 +44,7 @@ namespace StirkaBot.Services
             start.add(getStartLink(address));
 
             address.add(getNextLink(goal));
+            address.add(new Flow.Link() { label = "BotTest Conversation", node = goal, type = "address" });
 
             goal.add(new Flow.Link() { label = "Поломка", node = cleanliness })
                 .add(new Flow.Link() { label = "Плановый визит", node = cleanliness })
@@ -149,7 +150,7 @@ namespace StirkaBot.Services
             }
         }
 
-        public static string convertToKeyboard(Flow.Node node)
+        public static string convertToKeyboard(Flow.Node node, string conversationId)
         {
             if (node.id == null)
             {
@@ -167,7 +168,8 @@ namespace StirkaBot.Services
                         {
                             node = node.id,
                             link = t.Value.id,
-                            label = t.Value.label
+                            label = t.Value.label,
+                            conversationId = conversationId
                         }).ToString(),
                         type = "text",
                     },

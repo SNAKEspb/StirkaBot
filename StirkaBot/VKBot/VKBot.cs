@@ -6,6 +6,7 @@ using StirkaBot.Services;
 using StirkaBot.VKBot.Models;
 using Newtonsoft.Json.Linq;
 using Microsoft.Extensions.Options;
+using System.Runtime.Caching;
 
 namespace StirkaBot.VKBot
 {
@@ -78,7 +79,7 @@ namespace StirkaBot.VKBot
             }
         }
 
-        public class Conversation : IOutgoingMessage
+        public class ConversationRequest : IOutgoingMessage
         {
             public int offset { get; set; }
             public int count { get; set; }
@@ -91,28 +92,78 @@ namespace StirkaBot.VKBot
             public string major_sort_id { get; set; }
         }
 
-        public async Task messagesGetConversations(IOutgoingMessage message)
+        public async Task<string> messagesGetConversationsAsync(IOutgoingMessage message)
+        {
+            try
+            {
+                return await vkService.sendRequest(message, "messages.getConversations", _options);
+            }
+            catch (Exception e)
+            {
+                _logger.Log(NLog.LogLevel.Error, e, "SendMessageAsync error");
+                return null;
+            }
+        }
+
+        public class MembersRequest : IOutgoingMessage
+        {
+            public int offset { get; set; }
+            public int count { get; set; }
+            public string filter { get; set; }
+            public string fields { get; set; }
+            public string group_id { get; set; }
+            public string sort { get; set; }
+        }
+
+
+        public async Task groupsGetMembers(IOutgoingMessage message)
         {
             try
             {
                 var tmessage = (OutgoingMessage)message;
 
-                var request = new Conversation
+                var request = new ConversationRequest
                 {
                     offset = 0,
-                    count = 200,
-                    filter = "all",
-                    //start_message_id = "0",
-                    //extended = "1"
+                    count = 10,
+                    filter = "managers",
                     //fields = 
-                    //group_id = _options.groupId,
+                    group_id = _options.groupId,
                     //major_sort_id = 
                 };
-                await vkService.sendRequest(request, "messages.getConversations", _options);
+                await vkService.sendRequest(request, "groups.getMembers", _options);
             }
             catch (Exception e)
             {
                 _logger.Log(NLog.LogLevel.Error, e, "SendMessageAsync error");
+            }
+        }
+
+        public class UsersRequest : IOutgoingMessage
+        {
+            public string user_ids { get; set; }
+            public string fields { get; set; }
+            public string name_case { get; set; }
+        }
+
+        public async Task<string> usersGetAsync(IOutgoingMessage message)
+        {
+            try
+            {
+                //ObjectCache cache = MemoryCache.Default;
+                //var tmessage = (UsersRequest)message;
+                //if (cache[tmessage.user_ids] != null)
+                //{
+                //    return cache[tmessage.user_ids];
+                //}
+
+                return await vkService.sendRequest(message, "users.get", _options);
+                //cache.Add(cacheKey, message, DateTime.Now.AddMinutes(5));
+            }
+            catch (Exception e)
+            {
+                _logger.Log(NLog.LogLevel.Error, e, "SendMessageAsync error");
+                return null;
             }
         }
 

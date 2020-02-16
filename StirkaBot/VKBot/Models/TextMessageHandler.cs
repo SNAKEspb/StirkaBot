@@ -7,11 +7,12 @@ using Newtonsoft.Json.Linq;
 
 namespace StirkaBot.VKBot.Models
 {
-    public class TextMessageHandler : IUpdatesHandler<IIncomingMessage>  
+    public class TextMessageHandler : IUpdatesHandler<IIncomingMessage>
     {
         private StirkaBot.Models.Flow _flow;
 
-        public TextMessageHandler(StirkaBot.Models.Flow flow) {
+        public TextMessageHandler(StirkaBot.Models.Flow flow)
+        {
             _flow = flow;
         }
 
@@ -22,8 +23,8 @@ namespace StirkaBot.VKBot.Models
         {
             return _messageTypes.Contains(message.MessageType.ToLowerInvariant())
                 && string.IsNullOrWhiteSpace(message.payload)
-                && !string.IsNullOrWhiteSpace(message.text) 
-                && message.text.ToLower() == "начать";
+                && !string.IsNullOrWhiteSpace(message.text)
+                && message.text.Trim().ToLower() == "начать";
         }
         public async Task HandleAsync(IIncomingMessage message, IVKBot bot)
         {
@@ -32,7 +33,7 @@ namespace StirkaBot.VKBot.Models
 
             var nextNode = _flow.getNextNode(nodeId, linkId);
 
-            var keyboard = Services.FlowService.convertToKeyboard(nextNode);
+            var keyboard = Services.FlowService.convertToKeyboard(nextNode, null);
 
 
             var outgoingMessage = new OutgoingMessage()
@@ -42,6 +43,8 @@ namespace StirkaBot.VKBot.Models
                 keyboard = keyboard.ToString()
             };
             await bot.sendMessageAsync(outgoingMessage);
+
+
         }
     }
 }

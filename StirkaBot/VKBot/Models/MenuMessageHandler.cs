@@ -28,12 +28,21 @@ namespace StirkaBot.VKBot.Models
         {
             JObject payload = JObject.Parse(message.payload);
 
-            string nodeId = payload["command"] != null ? "0" : payload["node"].ToString();
-            string linkId = payload["command"] != null ? "0" : payload["link"].ToString();
+            string nodeId = payload["command"] != null ? "0" : (string)payload["node"];
+            string linkId = payload["command"] != null ? "0" : (string)payload["link"];
+            //string address = payload["command"] != null ? "0" : (string)payload["address"];
+            string conversationId = payload["command"] != null ? "0" : (string)payload["conversationId"];
 
             var nextNode = _flow.getNextNode(nodeId, linkId);
 
-            var keyboard = Services.FlowService.convertToKeyboard(nextNode);
+            var currentLink = _flow.getCurrentLink(nodeId, linkId);
+            string userId = await getUserNameAsync(message.from_id, bot);
+            if (currentLink.type != null && currentLink.type == "address")
+            {
+                conversationId = await getConversationIdAync(message.text, bot);
+            }
+
+            var keyboard = Services.FlowService.convertToKeyboard(nextNode, conversationId);
 
             var outgoingMessage = new OutgoingMessage()
             {
@@ -43,6 +52,36 @@ namespace StirkaBot.VKBot.Models
             };
 
             await bot.sendMessageAsync(outgoingMessage);
+        }
+
+        public async Task<string> getUserNameAsync(string userId, IVKBot bot)
+        {
+            var usersRequest = new VKBot.UsersRequest
+            {
+                user_ids = userId,
+                name_case = "nom",
+                //fields = 
+            };
+            var usersResponse = await bot.usersGetAsync(usersRequest);
+            var users = ((JArray)JObject.Parse(usersResponse)["response"]).FirstOrDefault();
+            var userName = users["first_name"] + " " + users["last_name"];
+            return userName;
+        }
+
+        public async Task<string> getConversationIdAync(string conversationName, IVKBot bot)
+        {
+            var conversationRequest = new VKBot.ConversationRequest
+            {
+                offset = 0,
+                count = 100,
+                filter = "all"
+            };
+            var conversationResponse = await bot.messagesGetConversationsAsync(conversationRequest);
+            var conversation = ((JArray)JObject.Parse(conversationResponse)["response"]["items"])
+                .Where(t => t["conversation"]["chat_settings"] != null && (string)t["conversation"]["chat_settings"]["title"] == conversationName).FirstOrDefault();
+
+            string converstionId = (string)conversation["conversation"]["peer"]["id"];
+            return converstionId;
         }
     }
 }
