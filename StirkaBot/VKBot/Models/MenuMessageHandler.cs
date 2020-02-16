@@ -36,10 +36,20 @@ namespace StirkaBot.VKBot.Models
             var nextNode = _flow.getNextNode(nodeId, linkId);
 
             var currentLink = _flow.getCurrentLink(nodeId, linkId);
-            string userId = await getUserNameAsync(message.from_id, bot);
+            string userName = await getUserNameAsync(message.from_id, bot);
             if (currentLink.type != null && currentLink.type == "address")
             {
                 conversationId = await getConversationIdAync(message.text, bot);
+            }
+
+            if (conversationId != null) {
+                var conversationMessage = new OutgoingMessage()
+                {
+                    peer_id = conversationId,
+                    message = userName  + ": " + message.text
+                };
+
+                await bot.sendMessageAsync(conversationMessage);
             }
 
             var keyboard = Services.FlowService.convertToKeyboard(nextNode, conversationId);
